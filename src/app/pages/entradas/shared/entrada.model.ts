@@ -1,6 +1,7 @@
+import { BaseResourceModel } from "../../../shared/models/base-resource.model";
 import { Categorias } from "../../categorias/shared/categorias.model";
 
-export class Entrada {
+export class Entrada extends BaseResourceModel{
     constructor(
         public id?: number,
         public nome?: string,
@@ -12,7 +13,8 @@ export class Entrada {
         public categoriaId?: number,
         public categoria?: Categorias
     ){
-        
+        //executa o construtor da classe extendida
+        super();
     }
 
     static tipo = {
