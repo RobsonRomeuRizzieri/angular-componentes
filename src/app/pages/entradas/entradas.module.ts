@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from "../../shared/shared.module";
 
 import { EntradasRoutingModule } from './entradas-routing.module';
 import { EntradaListComponent } from './entrada-list/entrada-list.component';
@@ -11,10 +10,9 @@ import { IMaskModule } from "angular-imask";
 
 @NgModule({
   declarations: [EntradaListComponent, EntradaFormComponent],
-  imports: [
-    CommonModule,
-    EntradasRoutingModule,
-    ReactiveFormsModule,
+  imports: [    
+    SharedModule,
+    EntradasRoutingModule,    
     CalendarModule,
     IMaskModule        
   ]
