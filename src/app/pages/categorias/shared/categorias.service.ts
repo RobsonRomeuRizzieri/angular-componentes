@@ -8,7 +8,7 @@ import { Categorias } from "./categorias.model";
 export class CategoriasService extends BaseResourceService<Categorias>{  
 
   constructor(protected injector: Injector) { 
-    super("api/categorias", injector);
+    super("api/categorias", injector, Categorias.fromJson);
   }
 
 }

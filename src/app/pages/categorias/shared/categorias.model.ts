@@ -9,4 +9,8 @@ export class Categorias extends BaseResourceModel {
         super();
     }
 
+    //converte o json recebido em um objeto do tipo entrada
+    static fromJson(jsonData: any): Categorias {
+        return Object.assign(new Categorias(), jsonData) 
+    }
 }

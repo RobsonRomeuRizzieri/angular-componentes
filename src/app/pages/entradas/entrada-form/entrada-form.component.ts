@@ -97,7 +97,7 @@ export class EntradaFormComponent implements OnInit, AfterContentChecked {
   private criarEntrada(){
     //Esta atribuindo os valores do formulário para um novo objeto de categoria
     //Esse objeto novo está sendo atribuido para a constante 
-    const entrada: Entrada = Object.assign(new Entrada(), this.entradaForm.value);
+    const entrada: Entrada = Entrada.fromJson(this.entradaForm.value);
 
     this.entradaService.create(entrada)
       .subscribe(
@@ -110,7 +110,7 @@ export class EntradaFormComponent implements OnInit, AfterContentChecked {
   private alterarEntrada(){
     //Esta atribuindo os valores do formulário para um novo objeto de categoria
     //Esse objeto novo está sendo atribuido para a constante 
-    const entrada: Entrada = Object.assign(new Entrada(), this.entradaForm.value);
+    const entrada: Entrada = Entrada.fromJson(this.entradaForm.value);
 
     this.entradaService.update(entrada)
       .subscribe(

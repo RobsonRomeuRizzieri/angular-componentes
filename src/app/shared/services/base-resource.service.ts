@@ -13,7 +13,8 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
 
     constructor(
         protected apiPath:string,
-        protected injector: Injector
+        protected injector: Injector,
+        protected jsonDataToResourceFn: (jsonData: any) => T
     ){
         //Obtem uma instância existente de HttpClient para ser injetda na variável
         //Fazendo isso não precisa obter o HttpClient basta somente passar o inject no construtor
@@ -22,8 +23,14 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
 
     getAll(): Observable<T[]>{
         return this.http.get(this.apiPath).pipe(
-            catchError(this.handleError),
-            map(this.jsonDataToResources)
+            //Executando a função
+            //map((jsonData: Array<any>) => this.jsonDataToResources(jsonData)),
+            //é uma função atribuida como parametro
+            //map(this.jsonDataToResources),
+            //Está definindo qual o this deve ser executado
+            //nesse caso o this da própria classe
+            map(this.jsonDataToResources.bind(this)),
+            catchError(this.handleError)            
         )  
     }
 
@@ -31,15 +38,15 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         const url = `${this.apiPath}/${id}`;
 
         return this.http.get(url).pipe(
-        catchError(this.handleError), 
-        map(this.jsonDataToResource)
+            map(this.jsonDataToResource.bind(this)),
+            catchError(this.handleError)         
         )
     }
 
     create(resource: T): Observable<T>{
         return this.http.post(this.apiPath, resource).pipe(
-        catchError(this.handleError), 
-        map(this.jsonDataToResource)
+            map(this.jsonDataToResource.bind(this)),
+            catchError(this.handleError)         
         )
     }
 
@@ -47,26 +54,30 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
         const url = `${this.apiPath}/${resource.id}`;
 
         return this.http.put(url, resource).pipe(
-        catchError(this.handleError), 
-        map(() => resource)
+            map(() => resource),
+            catchError(this.handleError)        
         )
     }
 
     delete(id: number): Observable<any> {
         const url = `${this.apiPath}/${id}`;
         return this.http.delete(url).pipe(
-        catchError(this.handleError), 
-        map(() => null)
+            map(() => null),
+            catchError(this.handleError)        
         )
     }
     //protected permite a classe que herdam da classe ter acesso aos métodos
     protected jsonDataToResource(jsonData: any): T{
-        return jsonData as T;
+        return this.jsonDataToResourceFn(jsonData);
     }
 
     protected jsonDataToResources(jsonData: any[]): T[]{
         const resources: T[] = [];
-        jsonData.forEach(element => resources.push(element as T));
+        //For para cada elemento no json
+        jsonData.forEach(
+            //this.jsonDataToResourceFn executando o método recebido no construtor 
+            element => resources.push(this.jsonDataToResourceFn(element))
+        );
         return resources;
     } 
 
