@@ -1,42 +1,29 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable, Injector } from '@angular/core';
+import { BaseResourceService } from "../../../shared/services/base-resource.service"
 
 import { Observable, throwError } from "rxjs";
 import { map, catchError, flatMap } from "rxjs/operators";
 
 import { Entrada } from "./entrada.model";
 import { CategoriasService } from "../../categorias/shared/categorias.service"
-import { element } from '@angular/core/src/render3';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EntradaService {
+export class EntradaService extends BaseResourceService<Entrada>{
 
-  private apiPath: string = "api/entradas";
-
+  //private apiPath: string = "api/entradas";
   constructor(
-    private http: HttpClient,
+    protected injector: Injector,
     private categoriaService: CategoriasService
-  ) { }
-
-  getAll():
-    Observable<Entrada[]>{
-      return this.http.get(this.apiPath).pipe(
-        catchError(this.handleError),
-        map(this.jsonDataToEntradas)
-      )  
+    ) { 
+    super("api/entradas", injector);
   }
 
-  getById(id: number): Observable<Entrada>{
-    const url = `${this.apiPath}/${id}`;
-
-    return this.http.get(url).pipe(
-      catchError(this.handleError), 
-      map(this.jsonDataToEntrada)
-    )
-  }
-
+//  constructor(
+//    private http: HttpClient,
+//    private categoriaService: CategoriasService
+//  ) { }
   create(entrada: Entrada): Observable<Entrada>{
     //entrada.categoriaId // vai conter o id
     //entrada.categoria // vai ser igual a null
@@ -48,7 +35,7 @@ export class EntradaService {
         //Já retorna um observable da entrada
         return this.http.post(this.apiPath, entrada).pipe(
           catchError(this.handleError), 
-          map(this.jsonDataToEntrada)
+          map(this.jsonDataToResource)
         )        
       })
     )    
@@ -68,19 +55,13 @@ export class EntradaService {
     )
   }
 
-  delete(id: number): Observable<any> {
-    const url = `${this.apiPath}/${id}`;
-    return this.http.delete(url).pipe(
-      catchError(this.handleError), 
-      map(() => null)
-    )
-  }
-
-  private jsonDataToEntrada(jsonData: any): Entrada{
+  //Sobrepondo o método da classe base
+  protected jsonDataToResource(jsonData: any): Entrada{
     return  Object.assign(new Entrada(), jsonData);
   }
 
-  private jsonDataToEntradas(jsonData: any[]): Entrada[]{
+  //Sobrepondo o método da classe base
+  protected jsonDataToResources(jsonData: any[]): Entrada[]{
     //array do tipo Entrada
     const entradas: Entrada[] = [];
     jsonData.forEach(element => {
@@ -93,8 +74,4 @@ export class EntradaService {
     return entradas;
   } 
 
-  private handleError(error: any): Observable<any>{
-    console.log("Erro na requisição => ", error);
-    return throwError(error);
-  }
 }
