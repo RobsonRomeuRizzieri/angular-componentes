@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { BaseResourceService } from "../../../shared/services/base-resource.service"
 
 import { Observable } from "rxjs";
-import { flatMap } from "rxjs/operators";
+import { flatMap, catchError } from "rxjs/operators";
 
 import { Entrada } from "./entrada.model";
 import { CategoriasService } from "../../categorias/shared/categorias.service"
@@ -25,6 +25,14 @@ export class EntradaService extends BaseResourceService<Entrada>{
 //    private categoriaService: CategoriasService
 //  ) { }
   create(entrada: Entrada): Observable<Entrada>{
+    return this.setCategoriaAndSendToServer(entrada, super.create.bind(this))
+  }
+
+  update(entrada: Entrada): Observable<Entrada> {    
+    return this.setCategoriaAndSendToServer(entrada, super.update.bind(this))
+  }
+  //sendFn recebe como paramentro a função que vai fazer o envio dos dados
+  private setCategoriaAndSendToServer(entrada: Entrada, sendFn: any): Observable<Entrada> {
     //entrada.categoriaId // vai conter o id
     //entrada.categoria // vai ser igual a null
     //precisamos fazer a relação manualmente
@@ -33,18 +41,9 @@ export class EntradaService extends BaseResourceService<Entrada>{
       flatMap(categoria => {
         entrada.categoria = categoria
         //Já retorna um observable da entrada
-        return super.create(entrada);      
-      })
-    )    
-  }
-
-  update(entrada: Entrada): Observable<Entrada> {    
-
-    return this.categoriaService.getById(entrada.categoriaId).pipe(
-      flatMap(categoria => {
-        entrada.categoria = categoria
-        return super.update(entrada);
-      })
-    )
+        return sendFn(entrada);      
+      }),
+      catchError(this.handleError)
+    )     
   }
 }
