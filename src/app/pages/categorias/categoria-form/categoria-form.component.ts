@@ -5,10 +5,6 @@ import { BaseResourceFormComponent } from "../../../shared/components/base-resou
 import { Categorias } from "../shared/categorias.model";
 import { CategoriasService } from "../shared/categorias.service";
 
-import { switchMap } from "rxjs/operators";
-
-import { NO_ERRORS_SCHEMA } from '@angular/compiler/src/core';
-
 @Component({
   selector: 'app-categoria-form',
   templateUrl: './categoria-form.component.html',
