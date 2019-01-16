@@ -60,7 +60,7 @@
       Total de receitas
     </div>
     <div class="card-title">
-      1500
+      {{ revenueTotal }}
     </div>
   </div>
 
@@ -69,7 +69,7 @@
       Total de despesas
     </div>
     <div class="card-title">
-      500
+      {{ expenseTotal}}
     </div>
   </div>  
 
@@ -78,17 +78,23 @@
       Total de saldo
     </div>
     <div class="card-title">
-      1000
+      {{ balance}}
     </div>
   </div>    
 </div>
 
 <div class="row mt-5 mb-4">
   <div class="col-md-6">
-    Gráfico de receitas
+    <p-chart type="bar"
+    [data]="revenueChartData"
+    [options]="chartOptions"
+    ></p-chart>
   </div>
 
   <div class="col-md-6">
-    Gráfico de despesas
+      <p-chart type="bar"
+      [data]="expenseChartData"
+      [options]="chartOptions"
+      ></p-chart>
   </div>
 </div>
