@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<form [formGroup]="categoriaForm" (submit)="submitFormValidar()">
+<form [formGroup]="resourceForm" (submit)="submitFormValidar()">
   <div class="card">
     <div class="card-header">
       Informações sobre a categoria
@@ -29,9 +29,9 @@
         <div class="form-group col-md-4">
           <label for="name">Nome</label>
           <input type="text" class="form-control" id="nome" formControlName="nome">
-          <div class="text-danger" *ngIf="categoriaForm.get('nome').invalid && categoriaForm.get('nome').touched">
-            <div *ngIf="categoriaForm.get('nome').errors.required">dado obrigatório</div>
-            <div *ngIf="categoriaForm.get('nome').errors.minlength">deve ter no mínimo 2 caracteres</div>
+          <div class="text-danger" *ngIf="resourceForm.get('nome').invalid && resourceForm.get('nome').touched">
+            <div *ngIf="resourceForm.get('nome').errors.required">dado obrigatório</div>
+            <div *ngIf="resourceForm.get('nome').errors.minlength">deve ter no mínimo 2 caracteres</div>
           </div>
         </div>
 
